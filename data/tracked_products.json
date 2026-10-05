@@ -1,0 +1,68 @@
+[
+  {
+    "id": "prod-1791131135420-grs2t",
+    "name": "LG 36\" Stainless Steel Refrigerator",
+    "url": "https://www.homedepot.com/p/LG-36-in-28-cu-ft-3-Door-French-Door-Refrigerator-w-Ice-and-Water-Dispenser-and-Craft-Ice-in-PrintProof-Stainless-Steel-LHFS28XBS/325158253",
+    "retailer": "homedepot.com",
+    "primarySelector": "a.product-card, .showcase-item",
+    "fallbackSelector": "catalog-grid-price",
+    "strategyUsed": "store_showcase_catalog_price",
+    "confidenceScore": 0.98,
+    "currency": "$",
+    "currentPrice": 1799,
+    "initialPrice": 3099,
+    "targetPrice": 1699,
+    "dropThresholdPct": 5,
+    "availability": "In Stock",
+    "priceHistory": [
+      {
+        "timestamp": 1791120000000,
+        "price": 3099
+      },
+      {
+        "timestamp": 1791131135420,
+        "price": 1799
+      }
+    ],
+    "lastChecked": 1791131135420,
+    "alerts": [
+      {
+        "type": "PRICE_DROP",
+        "severity": "high",
+        "message": "Special Buy: Price dropped -$1,300.00 (-41.9%) from $3,099.00 to $1,799.00!",
+        "timestamp": 1791131135420,
+        "savings": 1300,
+        "delta": -1300,
+        "pct": 41.9,
+        "confidence": 0.98
+      }
+    ],
+    "agentReasoning": "Special Buy active: Price $1,799.00 (Was $3,099.00, Save $1,300.00 / 42%). Autonomously identified and verified from retailer catalog.",
+    "active": true,
+    "analytics": {
+      "engine": "C++ Native (g++ -O3)",
+      "current_price": 1799,
+      "previous_price": 3099,
+      "min_price": 1799,
+      "max_price": 3099,
+      "mean_price": 2449,
+      "median_price": 2449,
+      "std_dev": 650,
+      "variance": 422500,
+      "z_score": -1.0,
+      "sma": 2449,
+      "ema": 2059,
+      "bollinger_upper": 3749,
+      "bollinger_lower": 1149,
+      "bollinger_bandwidth": 1.06,
+      "absolute_change": -1300,
+      "percent_change": -41.95,
+      "max_drawdown_percent": 41.95,
+      "is_all_time_low": true,
+      "is_significant_drop": true,
+      "is_anomaly": false,
+      "anomaly_confidence": 0.05,
+      "execution_time_ns": 12948
+    }
+  }
+]

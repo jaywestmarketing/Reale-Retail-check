@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  omniprice:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    container_name: omniprice_studio_247
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - NODE_ENV=production
+    volumes:
+      # Persistent storage for tracked products data
+      - omniprice_data:/app/data
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 1024M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+volumes:
+  omniprice_data:
+    driver: local
