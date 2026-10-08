@@ -15,25 +15,30 @@ import { CppAnalyticsTab } from './CppAnalyticsTab';
 import { SchedulerAlertsTab } from './SchedulerAlertsTab';
 import { RegistryCenterTab } from './RegistryCenterTab';
 import { ExecutionContinuityTab } from './ExecutionContinuityTab';
+import { CatalogSignalsTab } from './CatalogSignalsTab';
 import { TrackedProduct, MechanismItem } from '../types';
+import { Compass } from 'lucide-react';
 
 interface MechanismsHubTabProps {
   products: TrackedProduct[];
   mechanisms: MechanismItem[];
   onOpenCodeModal: (mechanismId: string) => void;
+  onTrackProduct?: (url: string) => void;
 }
 
 export const MechanismsHubTab: React.FC<MechanismsHubTabProps> = ({
   products,
   mechanisms,
   onOpenCodeModal,
+  onTrackProduct,
 }) => {
-  const [selectedSubTab, setSelectedSubTab] = useState<string>('m3-continuity');
+  const [selectedSubTab, setSelectedSubTab] = useState<string>('m7-catalog-signals');
 
   const subTabs = [
+    { id: 'm7-catalog-signals', label: 'Mechanism 7: Catalog Signals & Downloads', icon: Compass, badge: 'Multi-Page' },
+    { id: 'm3-continuity', label: 'Mechanism 3: 403 Error Continuity', icon: Zap, badge: 'Adaptive' },
     { id: 'm1-ingestion', label: 'Mechanism 1: Web Ingestion', icon: Globe, badge: 'Python' },
     { id: 'm2-agent', label: 'Mechanism 2: DOM Price Agent', icon: Bot, badge: 'Heuristic' },
-    { id: 'm3-continuity', label: 'Mechanism 3: 403 Error Continuity', icon: Zap, badge: 'Adaptive' },
     { id: 'm4-cpp', label: 'Mechanism 4: C++ Analytical Core', icon: Cpu, badge: 'C++17 -O3' },
     { id: 'm5-scheduler', label: 'Mechanism 5: Fluctuation Alerts', icon: Bell, badge: 'Scheduler' },
     { id: 'm6-registry', label: 'Mechanism 6: Registry & Export', icon: Layers, badge: 'Contracts' },
@@ -97,6 +102,9 @@ export const MechanismsHubTab: React.FC<MechanismsHubTabProps> = ({
 
       {/* Render Selected Mechanism Component */}
       <div className="space-y-6">
+        {selectedSubTab === 'm7-catalog-signals' && (
+          <CatalogSignalsTab onTrackProduct={onTrackProduct} />
+        )}
         {selectedSubTab === 'm1-ingestion' && (
           <IngestionTab onOpenCodeModal={onOpenCodeModal} />
         )}

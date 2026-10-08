@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   FolderTree,
   ShoppingBag,
@@ -12,8 +12,14 @@ import {
   AlertTriangle,
   ChevronRight,
   ShieldCheck,
+  Compass,
+  Download,
+  Zap,
+  Globe,
+  RefreshCw,
 } from 'lucide-react';
-import { AutonomousCrawlResult, DiscoveredLink, TraversalStep } from '../types';
+import { AutonomousCrawlResult, DiscoveredLink, TraversalStep, ContinuityResolutionResult } from '../types';
+import { testContinuityResolution } from '../api';
 
 interface CatalogExplorerDeckProps {
   crawlResult: AutonomousCrawlResult;
@@ -46,11 +52,28 @@ export const CatalogExplorerDeck: React.FC<CatalogExplorerDeckProps> = ({
     winning_continuity_strategy,
   } = crawlResult;
 
-  const [showContinuityAudit, setShowContinuityAudit] = React.useState(false);
+  const [showContinuityAudit, setShowContinuityAudit] = useState(false);
+  const [showBypassExplorer, setShowBypassExplorer] = useState(true);
+  const [testingCascade, setTestingCascade] = useState(false);
+  const [liveResolution, setLiveResolution] = useState<ContinuityResolutionResult | null>(null);
+
   const hasCategories = discovered_categories && discovered_categories.length > 0;
   const hasProducts = discovered_products && discovered_products.length > 0;
-  const hasAudit = continuity_audit && continuity_audit.length > 0;
+  const hasAudit = (continuity_audit && continuity_audit.length > 0) || (liveResolution?.audit_trail && liveResolution.audit_trail.length > 0);
+  const auditList = liveResolution?.audit_trail || continuity_audit || [];
 
+  const handleRunLiveBypassCascade = async () => {
+    setTestingCascade(true);
+    try {
+      const res = await testContinuityResolution(final_product_url || start_url);
+      setLiveResolution(res);
+      setShowContinuityAudit(true);
+    } catch (err) {
+      console.error('Failed to run live cascade:', err);
+    } finally {
+      setTestingCascade(false);
+    }
+  };
 
   return (
     <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-6 space-y-6 animate-in fade-in duration-200">
@@ -71,7 +94,7 @@ export const CatalogExplorerDeck: React.FC<CatalogExplorerDeckProps> = ({
               {crawlResult.success && (
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold flex items-center gap-1">
                   <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-                  Product Reached
+                  Product & Price Resolved
                 </span>
               )}
             </div>
@@ -80,6 +103,81 @@ export const CatalogExplorerDeck: React.FC<CatalogExplorerDeckProps> = ({
             </p>
           </div>
         </div>
+
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleRunLiveBypassCascade}
+            disabled={testingCascade}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-xl text-xs font-semibold cursor-pointer transition-colors shadow-2xs"
+            title="Tests all 11 adaptive 403 bypass connectivity adapters against this retailer"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${testingCascade ? 'animate-spin' : ''}`} />
+            <span>{testingCascade ? 'Testing Adapters...' : 'Test 403 Bypass Cascade Live'}</span>
+          </button>
+        </div>
+      </div>
+
+      {/* 403 Bypass Methods Explorer Panel */}
+      <div className="p-4 bg-slate-900 rounded-2xl text-white space-y-3 shadow-sm border border-slate-800">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div className="flex items-center gap-2.5">
+            <div className="w-7 h-7 rounded-lg bg-amber-400/20 text-amber-300 flex items-center justify-center">
+              <Zap className="w-4 h-4 text-amber-300" />
+            </div>
+            <div>
+              <h4 className="text-xs font-bold text-white flex items-center gap-2">
+                <span>403 Bypass Methods on Retailer Platforms</span>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                  Active Method: {winning_continuity_strategy || 'GOOGLE_SEARCH_INGRESS_REFERRER'}
+                </span>
+              </h4>
+              <p className="text-[11px] text-slate-300">
+                Autonomous mechanisms used to overcome Akamai, Cloudflare, PerimeterX, and AWS WAF anti-bot blocks.
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => setShowBypassExplorer(!showBypassExplorer)}
+            className="text-xs text-amber-400 hover:text-amber-300 font-semibold cursor-pointer self-start sm:self-auto"
+          >
+            {showBypassExplorer ? 'Collapse Methods' : 'Explore Methods'}
+          </button>
+        </div>
+
+        {showBypassExplorer && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 pt-2 border-t border-slate-800 text-xs">
+            <div className="p-2.5 bg-slate-800/80 rounded-xl border border-slate-700 space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-amber-300 text-[11px]">1. Google Search Ingress</span>
+                <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-amber-400/20 text-amber-200">Whitelisted</span>
+              </div>
+              <p className="text-[11px] text-slate-300 leading-relaxed">
+                Mimics inbound shopper entering via Google Search SERP with genuine HTTP/2 and cross-site headers. Edge firewalls relax bot detection to preserve organic sales.
+              </p>
+            </div>
+
+            <div className="p-2.5 bg-slate-800/80 rounded-xl border border-slate-700 space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-sky-300 text-[11px]">2. Firefox Gecko Persistent</span>
+                <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-sky-400/20 text-sky-200">Anti-Fingerprint</span>
+              </div>
+              <p className="text-[11px] text-slate-300 leading-relaxed">
+                Gecko TLS ClientHello framing avoids Chrome Client Hints bot heuristics. Demonstrated clean 10m+ stability on Oracle Cloud VPN egresses.
+              </p>
+            </div>
+
+            <div className="p-2.5 bg-slate-800/80 rounded-xl border border-slate-700 space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-emerald-300 text-[11px]">3. OpenSSL HTTP/2 & Cookies</span>
+                <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-emerald-400/20 text-emerald-200">ALPN Framing</span>
+              </div>
+              <p className="text-[11px] text-slate-300 leading-relaxed">
+                Native OpenSSL cURL subprocess bypasses Python's JA3 TLS fingerprint. Pre-flights origin handshake to acquire edge cookies before catalog crawling.
+              </p>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* 403 Bypassed Success Banner if resolved via Execution Continuity */}
@@ -95,7 +193,7 @@ export const CatalogExplorerDeck: React.FC<CatalogExplorerDeckProps> = ({
             </span>
           </div>
           <p className="text-[11px] leading-relaxed text-emerald-800">
-            Target retailer returned initial anti-bot resistance. The autonomous agent systematically tried alternative connectivity adapters and successfully bypassed the barrier using <strong>{winning_continuity_strategy || 'Native Subprocess cURL HTTP/2 & OpenSSL Ciphers'}</strong>.
+            Target retailer returned anti-bot resistance on direct connection. The autonomous agent engaged <strong>{winning_continuity_strategy || 'GOOGLE_SEARCH_INGRESS_REFERRER'}</strong>, navigated through verified doorway '{final_product_name}', and mapped the store hierarchy.
           </p>
         </div>
       )}
@@ -107,7 +205,7 @@ export const CatalogExplorerDeck: React.FC<CatalogExplorerDeckProps> = ({
             <div className="flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-indigo-600" />
               <span className="font-bold text-slate-900">
-                403 Adaptive Recovery Audit ({continuity_audit.length} Approaches Tried)
+                403 Adaptive Recovery Audit ({auditList.length} Approaches Logged)
               </span>
             </div>
             <button
@@ -121,7 +219,7 @@ export const CatalogExplorerDeck: React.FC<CatalogExplorerDeckProps> = ({
 
           {showContinuityAudit && (
             <div className="space-y-2 pt-2 border-t border-slate-200 animate-in fade-in duration-150">
-              {continuity_audit.map((audit, idx) => (
+              {auditList.map((audit, idx) => (
                 <div
                   key={idx}
                   className={`p-2.5 rounded-lg border text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2 ${
@@ -178,13 +276,18 @@ export const CatalogExplorerDeck: React.FC<CatalogExplorerDeckProps> = ({
       {/* Traversal Step Breadcrumb Trail */}
       {traversal_path && traversal_path.length > 0 && (
         <div className="space-y-2.5">
-          <span className="text-xs font-semibold text-slate-700 uppercase tracking-wider block">
-            Autonomous Traversal Path ({traversal_path.length} steps):
-          </span>
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-slate-700 uppercase tracking-wider block">
+              Autonomous Traversal Path ({traversal_path.length} steps):
+            </span>
+            <span className="text-[11px] text-slate-500 font-mono">
+              Google Ingress → Doorway Product → Nav Hierarchy → Price
+            </span>
+          </div>
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 overflow-x-auto no-scrollbar pb-1">
             {traversal_path.map((step, idx) => (
               <React.Fragment key={idx}>
-                <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl flex-1 min-w-[200px] space-y-1">
+                <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl flex-1 min-w-[210px] space-y-1">
                   <div className="flex items-center justify-between text-[10px] font-mono">
                     <span className="font-bold text-slate-500">STEP #{step.step_num}</span>
                     <span className="px-1.5 py-0.2 bg-white rounded border border-slate-200 text-slate-700 font-semibold">
@@ -194,7 +297,7 @@ export const CatalogExplorerDeck: React.FC<CatalogExplorerDeckProps> = ({
                   <div className="font-semibold text-xs text-slate-900 truncate">
                     {step.action_taken}
                   </div>
-                  <div className="text-[11px] text-slate-500 line-clamp-1">
+                  <div className="text-[11px] text-slate-500 line-clamp-2">
                     {step.summary}
                   </div>
                 </div>
@@ -204,6 +307,41 @@ export const CatalogExplorerDeck: React.FC<CatalogExplorerDeckProps> = ({
               </React.Fragment>
             ))}
           </div>
+        </div>
+      )}
+
+      {/* When items are not found on page 1 */}
+      {!hasProducts && (
+        <div className="p-4 bg-indigo-50/70 border border-indigo-200 rounded-xl space-y-3 text-xs text-indigo-950">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div className="flex items-center gap-2 font-semibold text-indigo-900">
+              <Compass className="w-4 h-4 text-indigo-600 shrink-0" />
+              <span>Items Not Found on Page 1 — National & Global Catalog Harvester Available</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <a
+                href="/api/catalog/download?format=csv"
+                download="catalog-signals-inventory.csv"
+                className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-medium text-indigo-700 bg-white border border-indigo-300 rounded-lg hover:bg-indigo-50 shadow-2xs"
+                title="Download internal catalog list as CSV spreadsheet"
+              >
+                <Download className="w-3 h-3 text-emerald-600" />
+                <span>Download CSV</span>
+              </a>
+              <a
+                href="/api/catalog/download?format=json"
+                download="catalog-signals-inventory.json"
+                className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-medium text-indigo-700 bg-white border border-indigo-300 rounded-lg hover:bg-indigo-50 shadow-2xs"
+                title="Download internal catalog list as JSON schema"
+              >
+                <Download className="w-3 h-3 text-indigo-600" />
+                <span>Download JSON</span>
+              </a>
+            </div>
+          </div>
+          <p className="text-[11px] text-indigo-800 leading-relaxed">
+            The target URL is a catalog hub, category tree, or search portal without direct page-1 product cards. The <strong>National & Global Catalog Signal Harvester</strong> maps verified national/global portals (US, UK, EU, Canada), deep feeds, and pagination streams (Page 2+) into a persistent internal list with full download access.
+          </p>
         </div>
       )}
 
@@ -283,7 +421,7 @@ export const CatalogExplorerDeck: React.FC<CatalogExplorerDeckProps> = ({
               <span>Categories & Departments Discovered ({discovered_categories.length})</span>
             </span>
             <span className="text-[11px] text-slate-400">
-              Click any category to autonomously crawl its catalog
+              Click any department to explore its product catalog
             </span>
           </div>
 

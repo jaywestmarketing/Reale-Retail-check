@@ -111,6 +111,30 @@ export const DOMAgentTab: React.FC<DOMAgentTabProps> = ({ onOpenCodeModal }) => 
                 <span className="text-slate-400">Live test URLs:</span>
                 <button
                   type="button"
+                  onClick={() => setTestUrl('https://www.homedepot.com')}
+                  className="text-amber-700 hover:underline cursor-pointer font-medium"
+                >
+                  The Home Depot
+                </button>
+                <span className="text-slate-300">·</span>
+                <button
+                  type="button"
+                  onClick={() => setTestUrl('https://www.walmart.com')}
+                  className="text-blue-700 hover:underline cursor-pointer font-medium"
+                >
+                  Walmart
+                </button>
+                <span className="text-slate-300">·</span>
+                <button
+                  type="button"
+                  onClick={() => setTestUrl('https://www.example.com')}
+                  className="text-emerald-700 hover:underline cursor-pointer font-medium"
+                >
+                  Example Store
+                </button>
+                <span className="text-slate-300">·</span>
+                <button
+                  type="button"
                   onClick={() => setTestUrl('https://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html')}
                   className="text-amber-600 hover:underline cursor-pointer"
                 >
@@ -122,7 +146,7 @@ export const DOMAgentTab: React.FC<DOMAgentTabProps> = ({ onOpenCodeModal }) => 
                   onClick={() => setTestUrl('https://scrapeme.live/shop/Bulbasaur/')}
                   className="text-amber-600 hover:underline cursor-pointer"
                 >
-                  ScrapeMe Live Store
+                  ScrapeMe Store
                 </button>
               </div>
             </div>

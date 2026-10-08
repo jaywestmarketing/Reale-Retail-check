@@ -94,6 +94,20 @@ function runPythonCli(command: string, payload: any): Promise<any> {
   });
 }
 
+function runPythonCliRaw(command: string, payload: any): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const scriptPath = path.resolve(__dirname, 'backend', 'cli_runner.py');
+    const jsonStr = JSON.stringify(payload);
+    execFile('python3', [scriptPath, command, jsonStr], { maxBuffer: 10 * 1024 * 1024, timeout: 60000 }, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`Error running CLI ${command}:`, stderr || error.message);
+        return reject(new Error(stderr || error.message));
+      }
+      resolve(stdout);
+    });
+  });
+}
+
 // Recalculate C++ analytics for initial items
 async function initializeAnalytics() {
   for (const item of trackedProducts) {
@@ -152,6 +166,54 @@ async function startServer() {
     }
     try {
       const result = await runPythonCli('test_continuity', { url, options });
+      res.json(result);
+    } catch (err: any) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+
+  // 2b-0b. Dynamic Experience Weighted Decision Resolver Endpoints (Mechanism 7)
+  app.get('/api/experience/state', async (req: Request, res: Response) => {
+    try {
+      const result = await runPythonCli('experience_state', {});
+      res.json(result);
+    } catch (err: any) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+
+  app.post('/api/experience/set-environment', async (req: Request, res: Response) => {
+    try {
+      const { environment_id } = req.body;
+      const result = await runPythonCli('experience_set_env', { environment_id });
+      res.json(result);
+    } catch (err: any) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+
+  app.post('/api/experience/update-coefficients', async (req: Request, res: Response) => {
+    try {
+      const { coefficients } = req.body;
+      const result = await runPythonCli('experience_update_coeffs', { coefficients });
+      res.json(result);
+    } catch (err: any) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+
+  app.post('/api/experience/record', async (req: Request, res: Response) => {
+    try {
+      const result = await runPythonCli('experience_record', req.body);
+      res.json(result);
+    } catch (err: any) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+
+  app.post('/api/experience/reset', async (req: Request, res: Response) => {
+    try {
+      const result = await runPythonCli('experience_reset', {});
       res.json(result);
     } catch (err: any) {
       res.status(500).json({ error: err.message });
@@ -624,6 +686,62 @@ async function startServer() {
     }
   });
 
+  // 9b. National & Global Catalog Signal Harvester & Multi-Page Registry Endpoints
+  app.post('/api/catalog/harvest', async (req: Request, res: Response) => {
+    try {
+      const { url, options } = req.body;
+      if (!url) {
+        return res.status(400).json({ error: 'URL parameter is required' });
+      }
+      const result = await runPythonCli('catalog_harvest', { url, options: options || {} });
+      res.json(result);
+    } catch (err: any) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+
+  app.get('/api/catalog/signals', async (req: Request, res: Response) => {
+    try {
+      const { filter_type, search } = req.query;
+      const result = await runPythonCli('catalog_list', {
+        filter_type: filter_type ? String(filter_type) : undefined,
+        search: search ? String(search) : undefined,
+      });
+      res.json(result);
+    } catch (err: any) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+
+  // Direct Download Access for Internal Catalog & Signals List (CSV / JSON)
+  app.get('/api/catalog/download', async (req: Request, res: Response) => {
+    try {
+      const format = (req.query.format as string || 'csv').toLowerCase();
+      if (format === 'json') {
+        const jsonText = await runPythonCliRaw('catalog_export_json', {});
+        res.setHeader('Content-Type', 'application/json; charset=utf-8');
+        res.setHeader('Content-Disposition', 'attachment; filename="catalog-signals-inventory.json"');
+        return res.send(jsonText);
+      } else {
+        const csvText = await runPythonCliRaw('catalog_export_csv', {});
+        res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+        res.setHeader('Content-Disposition', 'attachment; filename="catalog-signals-inventory.csv"');
+        return res.send(csvText);
+      }
+    } catch (err: any) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+
+  app.post('/api/catalog/clear', async (req: Request, res: Response) => {
+    try {
+      const result = await runPythonCli('catalog_clear', {});
+      res.json(result);
+    } catch (err: any) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+
   // 10. Export Mechanism Source Files for Other Projects
   app.get('/api/export/mechanism/:id', (req: Request, res: Response) => {
     const { id } = req.params;
@@ -664,6 +782,16 @@ async function startServer() {
         files = [
           { filename: 'execution_continuity_adapter.py', content, language: 'python' },
           { filename: 'contracts.py', content: contract, language: 'python' },
+        ];
+      } else if (id === 'NATIONAL_GLOBAL_CATALOG_SIGNAL_DISCOVERY_MECHANISM' || id.toLowerCase().includes('catalog')) {
+        const content = fs.readFileSync(path.resolve(__dirname, 'backend', 'mechanisms', 'catalog_signal_mechanism.py'), 'utf-8');
+        files = [
+          { filename: 'catalog_signal_mechanism.py', content, language: 'python' },
+        ];
+      } else if (id === 'EXPERIENCE_WEIGHTED_DECISION_RESOLVER' || id.toLowerCase().includes('experience') || id.toLowerCase().includes('weight')) {
+        const content = fs.readFileSync(path.resolve(__dirname, 'backend', 'mechanisms', 'experience_weight_mechanism.py'), 'utf-8');
+        files = [
+          { filename: 'experience_weight_mechanism.py', content, language: 'python' },
         ];
       } else {
         return res.status(404).json({ error: 'Mechanism not found' });

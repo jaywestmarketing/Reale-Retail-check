@@ -37,21 +37,21 @@ class DOMNode:
     def get_selector(self) -> str:
         """Derives a resilient CSS selector for this element."""
         # 1. Unique ID
-        el_id = self.attrs.get("id")
+        el_id = self.attrs.get("id") or ""
         if el_id and not re.search(r'\d{6,}', el_id):
             return f"#{el_id}"
 
         # 2. Data automation / test attributes
         for attr in ["data-automation-id", "data-testid", "data-test"]:
-            if attr in self.attrs:
+            if attr in self.attrs and self.attrs[attr]:
                 return f"{self.tag}[{attr}='{self.attrs[attr]}']"
 
         # 3. Itemprop
-        if "itemprop" in self.attrs:
+        if self.attrs.get("itemprop"):
             return f"{self.tag}[itemprop='{self.attrs['itemprop']}']"
 
         # 4. Semantic classes
-        classes = self.attrs.get("class", "").split()
+        classes = (self.attrs.get("class") or "").split()
         meaningful_classes = [
             c for c in classes
             if any(k in c.lower() for k in ["price", "cost", "hero", "current", "amount", "sale"])
@@ -77,14 +77,14 @@ class DOMNode:
 
     def get_xpath(self) -> str:
         """Derives an XPath expression."""
-        if "id" in self.attrs:
+        if self.attrs.get("id"):
             return f"//*[@id='{self.attrs['id']}']"
-        if "itemprop" in self.attrs:
+        if self.attrs.get("itemprop"):
             return f"//{self.tag}[@itemprop='{self.attrs['itemprop']}']"
-        if "class" in self.attrs:
-            cls = self.attrs["class"].split()[0] if self.attrs["class"] else ""
-            if cls:
-                return f"//{self.tag}[contains(@class, '{cls}')]"
+        if self.attrs.get("class"):
+            cls_list = (self.attrs["class"] or "").split()
+            if cls_list:
+                return f"//{self.tag}[contains(@class, '{cls_list[0]}')]"
         return f"//{self.tag}"
 
 class LightweightDOMParser(HTMLParser):
@@ -102,7 +102,8 @@ class LightweightDOMParser(HTMLParser):
         self.in_h1 = False
 
     def handle_starttag(self, tag, attrs):
-        attr_dict = dict(attrs)
+        # Guarantee all attribute keys and values are non-None strings
+        attr_dict = {str(k).lower(): (str(v) if v is not None else "") for k, v in attrs}
         if tag == "script":
             self.in_script = True
             self.script_type = attr_dict.get("type", "")
@@ -276,8 +277,11 @@ class AutonomousDOMPriceAgent(DOMAgentMechanismContract):
             ancestor_str = ""
             curr_ancestor = node
             while curr_ancestor:
-                c_str = curr_ancestor.attrs.get("class", "") + " " + curr_ancestor.attrs.get("id", "")
-                ancestor_str += (" " + c_str.lower())
+                c_val = curr_ancestor.attrs.get("class") or ""
+                id_val = curr_ancestor.attrs.get("id") or ""
+                c_str = f"{c_val} {id_val}".strip()
+                if c_str:
+                    ancestor_str += (" " + c_str.lower())
                 curr_ancestor = curr_ancestor.parent
 
             # Noise Penalty
@@ -286,7 +290,9 @@ class AutonomousDOMPriceAgent(DOMAgentMechanismContract):
                 reasons.append("Element located inside header/cart/footer/navigation (-45%)")
 
             # Strike-through / list price penalty
-            classes_str = " ".join([node.attrs.get("class", ""), node.attrs.get("id", "")]).lower()
+            node_cls = node.attrs.get("class") or ""
+            node_id = node.attrs.get("id") or ""
+            classes_str = f"{node_cls} {node_id}".lower()
             if any(term in classes_str for term in ["strike", "was", "original", "list-price", "basisprice", "regular", "old-price"]):
                 score -= 0.35
                 reasons.append("Element flagged as strikethrough/original price (-35%)")

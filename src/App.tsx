@@ -5,9 +5,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { Header } from './components/Header';
+import { ExperienceWeightedResolverTab } from './components/ExperienceWeightedResolverTab';
 import { ProductRadarTab } from './components/ProductRadarTab';
 import { MechanismsHubTab } from './components/MechanismsHubTab';
 import { CloudPlannerTab } from './components/CloudPlannerTab';
+import { CatalogSignalsTab } from './components/CatalogSignalsTab';
 import { AgentInspectModal } from './components/AgentInspectModal';
 import { CodeModal } from './components/CodeModal';
 import {
@@ -21,7 +23,7 @@ import {
 import { TrackedProduct, MechanismItem, AdvancedScanOptions } from './types';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<string>('radar');
+  const [activeTab, setActiveTab] = useState<string>('weighted-resolver');
   const [products, setProducts] = useState<TrackedProduct[]>([]);
   const [mechanisms, setMechanisms] = useState<MechanismItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -122,14 +124,16 @@ export default function App() {
           </div>
         ) : (
           <>
-            {activeTab === 'radar' && (
-              <ProductRadarTab
-                products={products}
-                onCheckProduct={handleCheckProduct}
-                onDeleteProduct={handleDeleteProduct}
-                onDirectScan={handleDirectScan}
-                loadingId={loadingId}
+            {/* Primary View: Dynamic Experience-Weighted Decision Resolver & Environment Matrix */}
+            {activeTab === 'weighted-resolver' && (
+              <ExperienceWeightedResolverTab
+                onOpenCodeModal={(id) => setExportMechanismId(id)}
               />
+            )}
+
+            {/* Dedicated National & Global Catalog Signal Harvester & Multi-Page Registry */}
+            {activeTab === 'catalog-signals' && (
+              <CatalogSignalsTab onTrackProduct={(url) => handleDirectScan(url)} />
             )}
 
             {/* Single dedicated page for checking all mechanisms specifically */}
@@ -138,12 +142,24 @@ export default function App() {
                 products={products}
                 mechanisms={mechanisms}
                 onOpenCodeModal={(id) => setExportMechanismId(id)}
+                onTrackProduct={(url) => handleDirectScan(url)}
               />
             )}
 
             {/* 24/7 Cloud Architecture & Cost Planner */}
             {activeTab === 'cloud-plan' && (
               <CloudPlannerTab />
+            )}
+
+            {/* Catalog Ingestion Workbench */}
+            {activeTab === 'radar' && (
+              <ProductRadarTab
+                products={products}
+                onCheckProduct={handleCheckProduct}
+                onDeleteProduct={handleDeleteProduct}
+                onDirectScan={handleDirectScan}
+                loadingId={loadingId}
+              />
             )}
           </>
         )}

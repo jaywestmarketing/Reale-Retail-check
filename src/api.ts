@@ -7,6 +7,8 @@ import {
   AutonomousCrawlResult,
   DiscoveredLink,
   ContinuityResolutionResult,
+  CatalogSignal,
+  CatalogHarvestResult,
 } from './types';
 
 export async function fetchMechanisms(): Promise<{ mechanisms: MechanismItem[] }> {
@@ -154,5 +156,90 @@ export async function testContinuityResolution(url: string, options?: any): Prom
     throw new Error(err.error || 'Failed to test continuity resolution');
   }
   return res.json();
+}
+
+export async function harvestCatalogSignals(url: string, options?: any): Promise<CatalogHarvestResult> {
+  const res = await fetch('/api/catalog/harvest', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ url, options }),
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.error || 'Failed to harvest catalog signals');
+  }
+  return data;
+}
+
+export async function fetchCatalogSignals(filter_type?: string, search?: string): Promise<{ status: string; total: number; signals: CatalogSignal[] }> {
+  const params = new URLSearchParams();
+  if (filter_type) params.set('filter_type', filter_type);
+  if (search) params.set('search', search);
+
+  const res = await fetch(`/api/catalog/signals?${params.toString()}`);
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.error || 'Failed to fetch catalog signals');
+  }
+  return data;
+}
+
+export async function clearCatalogSignals(): Promise<void> {
+  const res = await fetch('/api/catalog/clear', { method: 'POST' });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.error || 'Failed to clear catalog signals');
+  }
+}
+
+export function getCatalogDownloadUrl(format: 'csv' | 'json' = 'csv'): string {
+  return `/api/catalog/download?format=${format}`;
+}
+
+export async function fetchExperienceState(): Promise<import('./types').ExperienceStateResponse> {
+  const res = await fetch('/api/experience/state');
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to fetch experience state');
+  return data;
+}
+
+export async function setExperienceEnvironment(environment_id: string): Promise<any> {
+  const res = await fetch('/api/experience/set-environment', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ environment_id }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to set environment');
+  return data;
+}
+
+export async function updateExperienceCoefficients(coefficients: any): Promise<any> {
+  const res = await fetch('/api/experience/update-coefficients', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ coefficients }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to update coefficients');
+  return data;
+}
+
+export async function recordExperience(experience: any): Promise<any> {
+  const res = await fetch('/api/experience/record', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(experience),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to record experience');
+  return data;
+}
+
+export async function resetExperienceWeights(): Promise<any> {
+  const res = await fetch('/api/experience/reset', { method: 'POST' });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to reset weights');
+  return data;
 }
 

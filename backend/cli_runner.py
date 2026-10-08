@@ -91,6 +91,55 @@ def main():
             eval_res = scheduler.evaluate_fluctuation(product_id, new_price, history, target_price, drop_pct)
             print(json.dumps(eval_res))
 
+        elif cmd == "catalog_harvest":
+            url = payload.get("url", "")
+            options = payload.get("options", {})
+            if not url:
+                print(json.dumps({"error": "url parameter required"}))
+                return
+            harvest_res = hub.harvest_catalog_signals(url, options)
+            print(json.dumps(harvest_res))
+
+        elif cmd == "catalog_list":
+            filter_type = payload.get("filter_type")
+            search = payload.get("search")
+            signals = hub.get_catalog_signals_list(filter_type, search)
+            print(json.dumps({"status": "ok", "total": len(signals), "signals": signals}))
+
+        elif cmd == "catalog_export_csv":
+            csv_text = hub.export_catalog_signals_csv()
+            print(csv_text)
+
+        elif cmd == "catalog_export_json":
+            json_text = hub.export_catalog_signals_json()
+            print(json_text)
+
+        elif cmd == "catalog_clear":
+            hub.clear_catalog_signals_list()
+            print(json.dumps({"status": "ok", "message": "Internal catalog signals list cleared"}))
+
+        elif cmd == "experience_state":
+            st = hub.get_experience_weights_state()
+            print(json.dumps(st))
+
+        elif cmd == "experience_set_env":
+            env_id = payload.get("environment_id", "oracle-cloud-vpn-1")
+            res = hub.set_experience_environment(env_id)
+            print(json.dumps(res))
+
+        elif cmd == "experience_update_coeffs":
+            coeffs = payload.get("coefficients", {})
+            res = hub.update_experience_coefficients(coeffs)
+            print(json.dumps(res))
+
+        elif cmd == "experience_record":
+            res = hub.record_custom_experience(payload)
+            print(json.dumps(res))
+
+        elif cmd == "experience_reset":
+            res = hub.reset_experience_weights()
+            print(json.dumps(res))
+
         else:
             print(json.dumps({"error": f"Unknown command: {cmd}"}))
 

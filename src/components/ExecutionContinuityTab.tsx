@@ -33,10 +33,14 @@ export const ExecutionContinuityTab: React.FC<ExecutionContinuityTabProps> = ({ 
   const [showRawJson, setShowRawJson] = useState(false);
 
   const presets = [
+    { label: 'The Home Depot', url: 'https://www.homedepot.com', desc: 'Akamai edge bot shield & Google Ingress test' },
+    { label: 'Walmart', url: 'https://www.walmart.com', desc: 'PerimeterX challenge & retail catalog test' },
+    { label: 'Target', url: 'https://www.target.com', desc: 'Department hierarchy & edge WAF test' },
+    { label: 'Best Buy', url: 'https://www.bestbuy.com', desc: 'Cloudflare / Akamai electronics doorway test' },
+    { label: 'Example Store', url: 'https://www.example.com', desc: 'Store root & Google Search Ingress doorway test' },
     { label: 'ScrapeMe Live Store', url: 'https://scrapeme.live/shop/', desc: 'Live WooCommerce Store (Tests cURL HTTP/2)' },
     { label: 'Books To Scrape', url: 'https://books.toscrape.com/catalogue/category/books/travel_2/index.html', desc: 'Category Catalog Hub' },
     { label: 'Simulated 403 Forbidden', url: 'https://httpbin.org/status/403', desc: 'Direct HTTP 403 status code test' },
-    { label: 'Simulated 429 Rate Limit', url: 'https://httpbin.org/status/429', desc: 'Direct HTTP 429 backoff test' },
   ];
 
   const handleRunCascade = async (targetUrl = testUrl) => {

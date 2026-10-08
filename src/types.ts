@@ -145,6 +145,8 @@ export interface AdaptiveApproachAudit {
   outcome: string;
   reasoning: string;
   details: string;
+  weight_score?: number;
+  weight_rank?: number;
 }
 
 export interface ContinuityResolutionResult {
@@ -157,6 +159,75 @@ export interface ContinuityResolutionResult {
   audit_trail: AdaptiveApproachAudit[];
   final_ingestion_result?: any;
   explanation: string;
+  environment_id?: string;
+  dynamic_weights?: StrategyWeightProfile[];
+  decision_mode?: string;
+}
+
+export interface EnvironmentProfile {
+  environment_id: string;
+  name: string;
+  egress_type: string;
+  runtime_type: string;
+  transport_type: string;
+  notes: string;
+}
+
+export interface ExperienceRecord {
+  record_id: string;
+  timestamp: number;
+  strategy_id: string;
+  strategy_name: string;
+  environment_id: string;
+  status_code: number;
+  semantic_success: number;
+  sustained_stability: number;
+  data_correctness: number;
+  latency_ms: number;
+  resource_cost: number;
+  target_domain: string;
+  notes: string;
+}
+
+export interface WeightCoefficients {
+  w_semantic: number;
+  w_stability: number;
+  w_correctness: number;
+  w_speed: number;
+  w_resource: number;
+  w_env_history: number;
+}
+
+export interface StrategyWeightProfile {
+  strategy_id: string;
+  strategy_name: string;
+  composite_score: number;
+  semantic_score_avg: number;
+  stability_score_avg: number;
+  correctness_score_avg: number;
+  speed_score_avg: number;
+  resource_score: number;
+  total_runs: number;
+  success_runs: number;
+  partial_206_runs: number;
+  blocked_403_runs: number;
+  consecutive_clean: number;
+  avg_latency_ms: number;
+  environment_affinities: Record<string, number>;
+  recommended_rank: number;
+  last_updated: number;
+}
+
+export interface ExperienceStateResponse {
+  mechanism_id: string;
+  version: string;
+  contract_version: string;
+  active_environment: EnvironmentProfile;
+  available_environments: EnvironmentProfile[];
+  coefficients: WeightCoefficients;
+  strategy_weights: StrategyWeightProfile[];
+  total_experiences: number;
+  recent_experiences: ExperienceRecord[];
 }
 
 
@@ -234,4 +305,37 @@ export interface BenchmarkResult {
   python_projected_ms: number;
   cpp_speedup_factor: string;
   throughput_ops_per_sec: number;
+}
+
+export interface CatalogSignal {
+  id: string;
+  signal_type: string;
+  scope: string;
+  indicator_pattern: string;
+  source_url: string;
+  target_url: string;
+  title_or_label: string;
+  price_hint?: number | null;
+  currency: string;
+  status: string;
+  confidence: number;
+  discovered_at: number;
+  retailer: string;
+  metadata?: Record<string, any>;
+}
+
+export interface CatalogHarvestResult {
+  success: boolean;
+  start_url: string;
+  retailer: string;
+  signals_discovered: CatalogSignal[];
+  total_signals: number;
+  national_signals_count: number;
+  global_signals_count: number;
+  pagination_signals_count: number;
+  products_harvested_count: number;
+  traversal_summary: string[];
+  audit_trail: any[];
+  bypassed_403: boolean;
+  download_available: boolean;
 }

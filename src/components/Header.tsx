@@ -9,6 +9,9 @@ import {
   Plus,
   Zap,
   Cloud,
+  Compass,
+  TrendingUp,
+  Search,
 } from 'lucide-react';
 
 interface HeaderProps {
@@ -27,9 +30,11 @@ export const Header: React.FC<HeaderProps> = ({
   alertCount,
 }) => {
   const tabs = [
-    { id: 'radar', label: 'Live Price Scanner & Radar', icon: Activity, badge: productCount },
-    { id: 'mechanisms-hub', label: 'Mechanism Health & Diagnostics', icon: Layers, highlight: true },
+    { id: 'weighted-resolver', label: 'Experience-Weighted Resolver', icon: TrendingUp, badge: 'Dynamic Weights' },
+    { id: 'catalog-signals', label: 'Catalog Signals & Downloads', icon: Compass, badge: 'Internal List' },
+    { id: 'mechanisms-hub', label: 'Mechanism Health & Diagnostics', icon: Layers },
     { id: 'cloud-plan', label: '24/7 Cloud Planner', icon: Cloud },
+    { id: 'radar', label: 'Catalog Ingestion Workbench', icon: Activity },
   ];
 
   return (
@@ -39,19 +44,19 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Brand */}
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-lg bg-slate-900 flex items-center justify-center text-white shadow-sm">
-              <Zap className="w-5 h-5 text-amber-400" />
+              <TrendingUp className="w-5 h-5 text-emerald-400" />
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <h1 className="text-base font-semibold text-slate-900 tracking-tight">
-                  OmniPrice Mechanism Studio
+                  Autonomous Mechanism Studio & Continuity Network
                 </h1>
-                <span className="text-xs font-mono text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">
-                  C++ Native / Python 3.10
+                <span className="text-xs font-mono text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">
+                  Weighted Learning Engine
                 </span>
               </div>
               <p className="text-xs text-slate-500 hidden sm:block">
-                Interchangeable agentic price scraper & fluctuation analytics engine
+                Interchangeable autonomous mechanisms, environment matrix (Runtime + Transport + Egress), and dynamic weight learning
               </p>
             </div>
           </div>
@@ -62,8 +67,8 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={onOpenNewTracker}
               className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-white bg-slate-900 hover:bg-slate-800 rounded-lg shadow-sm transition-colors cursor-pointer"
             >
-              <Plus className="w-3.5 h-3.5" />
-              <span>Track New Product</span>
+              <Search className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Inspect Web Target</span>
             </button>
           </div>
         </div>
@@ -85,10 +90,10 @@ export const Header: React.FC<HeaderProps> = ({
               >
                 <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-amber-300' : 'text-slate-400'}`} />
                 <span>{tab.label}</span>
-                {tab.badge !== undefined && tab.badge > 0 && (
+                {tab.badge !== undefined && (
                   <span
                     className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
-                      isActive ? 'bg-slate-800 text-amber-300' : 'bg-slate-200 text-slate-700'
+                      isActive ? 'bg-slate-800 text-emerald-300' : 'bg-slate-200 text-slate-700'
                     }`}
                   >
                     {tab.badge}
