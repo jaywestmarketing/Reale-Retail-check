@@ -1,16 +1,14 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import React, { useState, useEffect } from 'react';
 import { Header } from './components/Header';
-import { ExperienceWeightedResolverTab } from './components/ExperienceWeightedResolverTab';
+import { CategoryScannerStudioTab } from './components/CategoryScannerStudioTab';
 import { ProductRadarTab } from './components/ProductRadarTab';
+import { ExecutionContinuityTab } from './components/ExecutionContinuityTab';
 import { MechanismsHubTab } from './components/MechanismsHubTab';
-import { CloudPlannerTab } from './components/CloudPlannerTab';
-import { CatalogSignalsTab } from './components/CatalogSignalsTab';
+import { BrowserBenchmarkingTab } from './components/BrowserBenchmarkingTab';
+import { RealBrowserTab } from './components/RealBrowserTab';
+import { CognitiveLearningEngineTab } from './components/CognitiveLearningEngineTab';
 import { AgentInspectModal } from './components/AgentInspectModal';
+import { GitHubPushModal } from './components/GitHubPushModal';
 import { CodeModal } from './components/CodeModal';
 import {
   fetchProducts,
@@ -23,20 +21,23 @@ import {
 import { TrackedProduct, MechanismItem, AdvancedScanOptions } from './types';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<string>('weighted-resolver');
+  const [activeTab, setActiveTab] = useState<string>('category-studio');
+  const [realBrowserUrl, setRealBrowserUrl] = useState<string>('https://www.homedepot.com/b/Tools/N-5yc1vZc1xy');
   const [products, setProducts] = useState<TrackedProduct[]>([]);
   const [mechanisms, setMechanisms] = useState<MechanismItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [loadingId, setLoadingId] = useState<string | null>(null);
+
+  // Modals
   const [isAgentModalOpen, setIsAgentModalOpen] = useState(false);
+  const [isGitHubModalOpen, setIsGitHubModalOpen] = useState(false);
   const [exportMechanismId, setExportMechanismId] = useState<string | null>(null);
 
-  // Initial load of real tracked products
   const loadData = async () => {
     try {
       const [prodRes, mechRes] = await Promise.all([
-        fetchProducts(),
-        fetchMechanisms(),
+        fetchProducts().catch(() => ({ products: [] })),
+        fetchMechanisms().catch(() => ({ mechanisms: [] })),
       ]);
       setProducts(prodRes.products || []);
       setMechanisms(mechRes.mechanisms || []);
@@ -51,7 +52,6 @@ export default function App() {
     loadData();
   }, []);
 
-  // Direct scan from top input on app load
   const handleDirectScan = async (url: string, advanced?: AdvancedScanOptions) => {
     const res = await scanAndTrackUrl(url, advanced?.targetPrice, advanced?.dropThresholdPct, advanced);
     if (res.success && res.product) {
@@ -68,18 +68,15 @@ export default function App() {
     return res;
   };
 
-  // Re-check a tracked product live over HTTP
   const handleCheckProduct = async (id: string) => {
     setLoadingId(id);
     try {
       const res = await checkProductNow(id);
       if (res.success && res.product) {
-        setProducts((prev) =>
-          prev.map((p) => (p.id === id ? res.product : p))
-        );
+        setProducts((prev) => prev.map((p) => (p.id === id ? res.product : p)));
       }
     } catch (e) {
-      console.error('Live re-check failed:', e);
+      console.error('Product re-check failed:', e);
     } finally {
       setLoadingId(null);
     }
@@ -102,56 +99,67 @@ export default function App() {
     }
   };
 
-  const totalAlerts = products.reduce((acc, p) => acc + (p.alerts?.length || 0), 0);
-
   return (
-    <div className="min-h-screen bg-slate-100/70 text-slate-900 font-sans antialiased flex flex-col">
+    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans antialiased flex flex-col">
       {/* Top Header Navigation */}
       <Header
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         onOpenNewTracker={() => setIsAgentModalOpen(true)}
+        onOpenGitHubPush={() => setIsGitHubModalOpen(true)}
+        checkpointCount={1}
         productCount={products.length}
-        alertCount={totalAlerts}
       />
 
-      {/* Main Content Viewport */}
+      {/* Main Viewport */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {isLoading ? (
           <div className="h-96 flex flex-col items-center justify-center space-y-3 text-slate-500">
-            <div className="w-8 h-8 border-3 border-slate-300 border-t-slate-900 rounded-full animate-spin" />
-            <span className="text-xs font-mono">Initializing Live Scraping Engine & C++ Core...</span>
+            <div className="w-8 h-8 border-3 border-slate-300 border-t-indigo-600 rounded-full animate-spin" />
+            <span className="text-xs font-mono">Initializing Autonomous Mechanisms...</span>
           </div>
         ) : (
           <>
-            {/* Primary View: Dynamic Experience-Weighted Decision Resolver & Environment Matrix */}
-            {activeTab === 'weighted-resolver' && (
-              <ExperienceWeightedResolverTab
-                onOpenCodeModal={(id) => setExportMechanismId(id)}
+            {/* Cognitive Platform Learning Engine & Human-Mimetic Synthesizer */}
+            {activeTab === 'learning-engine' && (
+              <CognitiveLearningEngineTab
+                onOpenRealBrowser={(url) => {
+                  setRealBrowserUrl(url);
+                  setActiveTab('real-browser');
+                }}
+                onOpenCategoryStudio={() => setActiveTab('category-studio')}
               />
             )}
 
-            {/* Dedicated National & Global Catalog Signal Harvester & Multi-Page Registry */}
-            {activeTab === 'catalog-signals' && (
-              <CatalogSignalsTab onTrackProduct={(url) => handleDirectScan(url)} />
-            )}
-
-            {/* Single dedicated page for checking all mechanisms specifically */}
-            {activeTab === 'mechanisms-hub' && (
-              <MechanismsHubTab
-                products={products}
-                mechanisms={mechanisms}
-                onOpenCodeModal={(id) => setExportMechanismId(id)}
+            {/* Primary View: Long-Running Category Scanner & Visual Studio */}
+            {activeTab === 'category-studio' && (
+              <CategoryScannerStudioTab
+                onOpenGitHubPush={() => setIsGitHubModalOpen(true)}
                 onTrackProduct={(url) => handleDirectScan(url)}
               />
             )}
 
-            {/* 24/7 Cloud Architecture & Cost Planner */}
-            {activeTab === 'cloud-plan' && (
-              <CloudPlannerTab />
+            {/* Browser Benchmarking & Egress Performance Lab */}
+            {activeTab === 'browser-benchmark' && (
+              <BrowserBenchmarkingTab
+                onOpenRealBrowser={(url) => {
+                  setRealBrowserUrl(url);
+                  setActiveTab('real-browser');
+                }}
+                onOpenCategoryStudio={() => setActiveTab('category-studio')}
+              />
             )}
 
-            {/* Catalog Ingestion Workbench */}
+            {/* Real Live In-App Browser (Interactive Webview with Akamai 403 Ingress Gateway) */}
+            {activeTab === 'real-browser' && (
+              <RealBrowserTab
+                initialUrl={realBrowserUrl}
+                onOpenBenchmark={() => setActiveTab('browser-benchmark')}
+                onOpenCategoryStudio={() => setActiveTab('category-studio')}
+              />
+            )}
+
+            {/* Tracked Catalog Radar Tab */}
             {activeTab === 'radar' && (
               <ProductRadarTab
                 products={products}
@@ -161,15 +169,34 @@ export default function App() {
                 loadingId={loadingId}
               />
             )}
+
+            {/* Execution Continuity & 403 Bypass Ingress */}
+            {activeTab === 'continuity' && (
+              <ExecutionContinuityTab />
+            )}
+
+            {/* Architecture & Interchangeable Mechanisms Manifest */}
+            {activeTab === 'mechanisms' && (
+              <MechanismsHubTab
+                mechanisms={mechanisms}
+                onOpenCodeModal={(id) => setExportMechanismId(id)}
+              />
+            )}
           </>
         )}
       </main>
 
-      {/* Live Agent Inspection Modal */}
+      {/* Agent Inspect Modal */}
       <AgentInspectModal
         isOpen={isAgentModalOpen}
         onClose={() => setIsAgentModalOpen(false)}
         onConfirmAdd={handleConfirmAddProduct}
+      />
+
+      {/* GitHub Push Modal */}
+      <GitHubPushModal
+        isOpen={isGitHubModalOpen}
+        onClose={() => setIsGitHubModalOpen(false)}
       />
 
       {/* Mechanism Code Export Modal */}

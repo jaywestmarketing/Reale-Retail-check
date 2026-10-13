@@ -6,8 +6,8 @@ export interface PriceCandidate {
   currency: string;
   confidence: number;
   strategy: string;
-  attributes: Record<string, string>;
-  rationale: string;
+  attributes?: Record<string, string>;
+  rationale?: string;
 }
 
 export interface AgentIdentificationResult {
@@ -22,16 +22,16 @@ export interface AgentIdentificationResult {
   availability: string;
   structured_data_found: boolean;
   agent_reasoning: string;
-  inspection_timestamp: number;
+  inspection_timestamp?: number;
 }
 
 export interface IngestionInfo {
   status_code: number;
   latency_ms: number;
-  retailer_detected: string;
+  timestamp: number;
   canonical_url: string;
-  headers: Record<string, string>;
-  html_preview: string;
+  retailer_detected: string;
+  error?: string | null;
 }
 
 export interface AgentInspectResponse {
@@ -39,216 +39,9 @@ export interface AgentInspectResponse {
   error?: string;
   ingestion: IngestionInfo;
   agent_identification: AgentIdentificationResult;
-}
-
-export interface CppAnalytics {
-  engine: string;
-  current_price: number;
-  previous_price: number;
-  min_price: number;
-  max_price: number;
-  mean_price: number;
-  median_price: number;
-  std_dev: number;
-  variance: number;
-  z_score: number;
-  sma: number;
-  ema: number;
-  bollinger_upper: number;
-  bollinger_lower: number;
-  bollinger_bandwidth: number;
-  absolute_change: number;
-  percent_change: number;
-  max_drawdown_percent: number;
-  is_all_time_low: boolean;
-  is_significant_drop: boolean;
-  is_anomaly: boolean;
-  anomaly_confidence: number;
-  execution_time_ns: number;
-}
-
-export interface AlertEvent {
-  type: 'TARGET_REACHED' | 'PRICE_DROP' | 'ALL_TIME_LOW' | 'ANOMALY_WARNING';
-  severity: 'high' | 'medium' | 'warning' | 'info';
-  message: string;
-  timestamp?: number;
-  savings?: number;
-  delta?: number;
-  pct?: number;
-  confidence?: number;
-}
-
-export type ScanMode = 'url' | 'url_list' | 'product' | 'platform_match';
-
-export interface AdvancedScanOptions {
-  sku?: string;
-  productNameFilter?: string;
-  minPrice?: number;
-  maxPrice?: number;
-  targetPrice?: number;
-  dropThresholdPct?: number;
-  customSelector?: string;
-  crawlScope?: 'single_item' | 'entire_website';
-  forceTrack?: boolean;
-  proxy_url?: string;
-}
-
-export interface DiscoveredLink {
-  url: string;
-  title: string;
-  link_type: 'category' | 'catalog' | 'product' | 'department';
-  confidence: number;
-  snippet?: string;
-  thumbnail?: string;
-  price_hint?: number | null;
-}
-
-export interface TraversalStep {
-  step_num: number;
-  url: string;
-  page_type: string;
-  action_taken: string;
-  summary: string;
-}
-
-export interface AutonomousCrawlResult {
-  success: boolean;
-  start_url: string;
-  initial_page_type: string;
-  final_product_url: string;
-  final_product_name: string;
-  detected_price: number | null;
-  currency: string;
-  primary_selector: string;
-  fallback_selector: string;
-  confidence_score: number;
-  strategy_used: string;
-  availability: string;
-  traversal_path: TraversalStep[];
-  discovered_categories: DiscoveredLink[];
-  discovered_products: DiscoveredLink[];
-  error?: string;
-  bot_shield_detected?: string;
-  agent_reasoning: string;
-  continuity_audit?: AdaptiveApproachAudit[];
+  crawl_result?: any;
   bypassed_403?: boolean;
   winning_continuity_strategy?: string;
-}
-
-export interface AdaptiveApproachAudit {
-  attempt_number: number;
-  strategy_id: string;
-  strategy_name: string;
-  classification: string;
-  status_code: number;
-  latency_ms: number;
-  outcome: string;
-  reasoning: string;
-  details: string;
-  weight_score?: number;
-  weight_rank?: number;
-}
-
-export interface ContinuityResolutionResult {
-  resolved: boolean;
-  winning_strategy?: string;
-  final_status_code: number;
-  original_status_code: number;
-  total_attempts: number;
-  total_latency_ms: number;
-  audit_trail: AdaptiveApproachAudit[];
-  final_ingestion_result?: any;
-  explanation: string;
-  environment_id?: string;
-  dynamic_weights?: StrategyWeightProfile[];
-  decision_mode?: string;
-}
-
-export interface EnvironmentProfile {
-  environment_id: string;
-  name: string;
-  egress_type: string;
-  runtime_type: string;
-  transport_type: string;
-  notes: string;
-}
-
-export interface ExperienceRecord {
-  record_id: string;
-  timestamp: number;
-  strategy_id: string;
-  strategy_name: string;
-  environment_id: string;
-  status_code: number;
-  semantic_success: number;
-  sustained_stability: number;
-  data_correctness: number;
-  latency_ms: number;
-  resource_cost: number;
-  target_domain: string;
-  notes: string;
-}
-
-export interface WeightCoefficients {
-  w_semantic: number;
-  w_stability: number;
-  w_correctness: number;
-  w_speed: number;
-  w_resource: number;
-  w_env_history: number;
-}
-
-export interface StrategyWeightProfile {
-  strategy_id: string;
-  strategy_name: string;
-  composite_score: number;
-  semantic_score_avg: number;
-  stability_score_avg: number;
-  correctness_score_avg: number;
-  speed_score_avg: number;
-  resource_score: number;
-  total_runs: number;
-  success_runs: number;
-  partial_206_runs: number;
-  blocked_403_runs: number;
-  consecutive_clean: number;
-  avg_latency_ms: number;
-  environment_affinities: Record<string, number>;
-  recommended_rank: number;
-  last_updated: number;
-}
-
-export interface ExperienceStateResponse {
-  mechanism_id: string;
-  version: string;
-  contract_version: string;
-  active_environment: EnvironmentProfile;
-  available_environments: EnvironmentProfile[];
-  coefficients: WeightCoefficients;
-  strategy_weights: StrategyWeightProfile[];
-  total_experiences: number;
-  recent_experiences: ExperienceRecord[];
-}
-
-
-export interface PlatformMatchResult {
-  query: string;
-  sku?: string;
-  platforms: {
-    platform: string;
-    productName: string;
-    price: number;
-    currency: string;
-    url: string;
-    inStock: boolean;
-    confidence: number;
-  }[];
-  bestPrice: {
-    platform: string;
-    price: number;
-    currency: string;
-    url: string;
-  };
 }
 
 export interface TrackedProduct {
@@ -269,8 +62,17 @@ export interface TrackedProduct {
   availability: string;
   priceHistory: { timestamp: number; price: number }[];
   lastChecked: number;
-  analytics?: CppAnalytics;
-  alerts: AlertEvent[];
+  analytics?: {
+    sma: number;
+    ema: number;
+    bollinger_upper: number;
+    bollinger_lower: number;
+    std_dev: number;
+    z_score: number;
+    is_significant_drop: boolean;
+    is_anomaly: boolean;
+  };
+  alerts: any[];
   agentReasoning: string;
   active: boolean;
 }
@@ -278,7 +80,7 @@ export interface TrackedProduct {
 export interface MechanismParameter {
   key: string;
   label: string;
-  type: 'number' | 'boolean' | 'select';
+  type: 'number' | 'boolean' | 'string' | 'select';
   options?: string[];
   default: any;
   current: any;
@@ -298,44 +100,185 @@ export interface MechanismItem {
   metrics: Record<string, any>;
 }
 
-export interface BenchmarkResult {
-  iterations: number;
-  cpp_available: boolean;
-  cpp_time_ms: number;
-  python_projected_ms: number;
-  cpp_speedup_factor: string;
-  throughput_ops_per_sec: number;
-}
-
-export interface CatalogSignal {
+export interface ActionLedgerEntry {
   id: string;
-  signal_type: string;
-  scope: string;
-  indicator_pattern: string;
-  source_url: string;
-  target_url: string;
-  title_or_label: string;
-  price_hint?: number | null;
-  currency: string;
-  status: string;
-  confidence: number;
-  discovered_at: number;
-  retailer: string;
-  metadata?: Record<string, any>;
+  timestamp: number;
+  iso_time: string;
+  action_type: string;
+  step_name: string;
+  url: string;
+  http_status: number;
+  duration_ms: number;
+  screenshot_preview: string;
+  selector_targeted: string;
+  extracted_summary: string;
+  status: 'SUCCESS' | 'BYPASS_ENGAGED' | 'WARNED' | 'ERROR';
+  agent_reasoning: string;
+  cooldown_applied_seconds: number;
 }
 
-export interface CatalogHarvestResult {
-  success: boolean;
-  start_url: string;
+export interface PlatformCooldownConfig {
+  platform_id: string;
+  name: string;
+  min_delay_sec: number;
+  max_delay_sec: number;
+  jitter_pct: number;
+  backoff_multiplier: number;
+  agent_capability_tier: string;
+  anti_bot_profile: string;
+  recommended_duration_hours?: number;
+}
+
+export interface ScannedCategoryItem {
+  id: string;
+  name: string;
+  url: string; // product URL on retailer platform
+  product_url?: string;
+  category_url?: string; // category URL on retailer platform
+  category_name?: string;
   retailer: string;
-  signals_discovered: CatalogSignal[];
-  total_signals: number;
-  national_signals_count: number;
-  global_signals_count: number;
-  pagination_signals_count: number;
-  products_harvested_count: number;
-  traversal_summary: string[];
-  audit_trail: any[];
-  bypassed_403: boolean;
-  download_available: boolean;
+  category_path: string;
+  price: number;
+  original_price?: number;
+  currency: string;
+  discount_pct: number;
+  availability: string;
+  rating: number;
+  reviews_count: number;
+  sku: string;
+  discovered_at: number;
+  screenshot_ref?: string;
+  url_verified?: boolean;
+  url_check_status?: string;
+  double_check_status?: string;
+  double_checked_at?: number;
+  store_resolver_url?: string;
+  google_search_url?: string;
+  double_check_latency_ms?: number;
+  is_dead_link_prevented?: boolean;
+}
+
+export interface ProductDoubleCheckResult {
+  product_url: string;
+  store_resolver_url: string;
+  sku: string;
+  retailer: string;
+  status: string;
+  is_active: boolean;
+  latency_ms: number;
+  check_timestamp: string;
+  verified_reason: string;
+}
+
+export interface AutomatedUrlCheckResult {
+  url: string;
+  is_valid: boolean;
+  status: 'VERIFIED' | 'WARNING' | 'INVALID';
+  http_status: number;
+  retailer_key: string;
+  retailer_name: string;
+  url_type: 'CATEGORY' | 'DEPARTMENT' | 'PRODUCT' | 'SEARCH' | 'STORE_ROOT';
+  detected_category: string;
+  category_path: string[];
+  canonical_url: string;
+  anti_bot_gateway: string;
+  bypass_protocol: string;
+  requires_vpn: boolean;
+  reachability_ms: number;
+  has_product_catalog: boolean;
+  estimated_catalog_depth: number;
+  recommended_cooldown: {
+    min_delay: number;
+    max_delay: number;
+    jitter_pct: number;
+    tier: string;
+  };
+  check_timestamp: string;
+  details: string;
+}
+
+export interface CategoryScanCheckpoint {
+  scan_id: string;
+  retailer: string;
+  root_category_url: string;
+  root_category_name: string;
+  status: 'RUNNING' | 'PAUSED' | 'CHECKPOINTED' | 'INTERRUPTED' | 'COMPLETED';
+  started_at: number;
+  last_checkpoint_at: number;
+  elapsed_seconds: number;
+  planned_duration_seconds: number;
+  cooldown_config: PlatformCooldownConfig;
+  current_depth: number;
+  max_depth: number;
+  pending_queue: any[];
+  completed_queue: any[];
+  items_collected: ScannedCategoryItem[];
+  action_ledger: ActionLedgerEntry[];
+  total_actions_logged: number;
+  stats: {
+    categories_completed: number;
+    categories_remaining: number;
+    total_items_cataloged: number;
+    avg_discount_pct: number;
+    price_min: number;
+    price_max: number;
+    bypassed_403_count: number;
+    cooldown_time_elapsed_sec: number;
+  };
+}
+
+export interface GitHubPushRequest {
+  token?: string;
+  repo: string;
+  branch?: string;
+  commitMessage?: string;
+  includeScans?: boolean;
+}
+
+export interface GitHubPushResponse {
+  success: boolean;
+  mode: 'DIRECT_GITHUB_API_PUSH' | 'STAGED_READY_FOR_PUSH';
+  repository: string;
+  branch: string;
+  files_pushed_count?: number;
+  files_prepared_count?: number;
+  files_list?: string[];
+  message: string;
+  git_commands?: string[];
+}
+
+export interface AdvancedScanOptions {
+  targetPrice?: string;
+  dropThresholdPct?: string;
+  sku?: string;
+  customSelector?: string;
+  productNameFilter?: string;
+  forceTrack?: boolean;
+  minPrice?: number;
+  maxPrice?: number;
+}
+
+export interface BenchmarkMetric {
+  strategy: string;
+  dns_lookup_ms: number;
+  tcp_connect_ms: number;
+  tls_handshake_ms: number;
+  ttfb_ms: number;
+  total_latency_ms: number;
+  http_code: number;
+  status: 'SUCCESS' | 'BLOCKED_403' | 'CHALLENGE_BYPASS';
+  anti_bot_status: string;
+  bandwidth_kb: number;
+  memory_overhead_mb: number;
+}
+
+export interface BenchmarkReport {
+  target_url: string;
+  retailer: string;
+  timestamp: string;
+  overall_grade: string;
+  overall_score: number;
+  speed_improvement_pct: number;
+  metrics: BenchmarkMetric[];
+  recommendation: string;
 }

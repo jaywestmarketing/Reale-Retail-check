@@ -1,0 +1,711 @@
+{
+  "plan_id": "plan_homedepot_1791820128_b01591",
+  "platform_id": "homedepot",
+  "platform_name": "The Home Depot Digital Platform",
+  "persona": "deliberate_shopper",
+  "description": "Careful, detail-oriented human shopper. Spends significant time reading specifications, checking secondary images, inspecting customer reviews, and verifying local store pickup inventory before adding to cart.",
+  "created_at": 1791820128.6874177,
+  "estimated_duration_sec": 32.618,
+  "mouse_curvature_factor": 0.82,
+  "poisson_dwell_mean_sec": 4.5,
+  "kinetic_scroll_steps": 12,
+  "steps": [
+    {
+      "step_number": 1,
+      "phase": "Session Warming & Orientation",
+      "action_type": "VISIT_HOMEPAGE_AND_DWELL",
+      "target_element": "window.viewport",
+      "target_label": "Land on The Home Depot Digital Platform Home",
+      "dwell_pause_ms": 4480,
+      "mouse_trajectory": {
+        "start_x": 100,
+        "start_y": 100,
+        "end_x": 480,
+        "end_y": 260,
+        "cp1": {
+          "x": 150,
+          "y": 246
+        },
+        "cp2": {
+          "x": 404,
+          "y": 174
+        },
+        "svg_path": "M 100 100 C 150 246, 404 174, 480 260",
+        "points": [
+          {
+            "x": 100.0,
+            "y": 100.0,
+            "t": 0.0
+          },
+          {
+            "x": 105.0,
+            "y": 112.5,
+            "t": 0.1
+          },
+          {
+            "x": 122.3,
+            "y": 138.5,
+            "t": 0.2
+          },
+          {
+            "x": 157.3,
+            "y": 167.5,
+            "t": 0.3
+          },
+          {
+            "x": 211.0,
+            "y": 189.7,
+            "t": 0.4
+          },
+          {
+            "x": 279.5,
+            "y": 201.7,
+            "t": 0.5
+          },
+          {
+            "x": 350.4,
+            "y": 211.1,
+            "t": 0.6
+          },
+          {
+            "x": 410.2,
+            "y": 222.2,
+            "t": 0.7
+          },
+          {
+            "x": 451.0,
+            "y": 237.6,
+            "t": 0.8
+          },
+          {
+            "x": 473.4,
+            "y": 252.7,
+            "t": 0.9
+          },
+          {
+            "x": 480.0,
+            "y": 260.0,
+            "t": 1.0
+          }
+        ],
+        "distance_px": 412.3
+      },
+      "typing_cadence_ms": null,
+      "simulated_scroll_px": 150,
+      "simulated_typo_correction": false,
+      "telemetry_emitted": "Akamai sensor_data initialized + Tealium page_view",
+      "human_rationale": "Authentic humans take 2-4 seconds upon arrival to orient their gaze and register page layout.",
+      "status": "PENDING"
+    },
+    {
+      "step_number": 2,
+      "phase": "Contextual Localization",
+      "action_type": "CONFIRM_STORE_LOCALIZATION",
+      "target_element": "#header-store-info",
+      "target_label": "Verify Local Store #0121 (Seeds THD_STORE cookie)",
+      "dwell_pause_ms": 2520,
+      "mouse_trajectory": {
+        "start_x": 480,
+        "start_y": 260,
+        "end_x": 840,
+        "end_y": 32,
+        "cp1": {
+          "x": 612,
+          "y": 270
+        },
+        "cp2": {
+          "x": 711,
+          "y": 27
+        },
+        "svg_path": "M 480 260 C 612 270, 711 27, 840 32",
+        "points": [
+          {
+            "x": 480.0,
+            "y": 260.0,
+            "t": 0.0
+          },
+          {
+            "x": 492.0,
+            "y": 261.2,
+            "t": 0.1
+          },
+          {
+            "x": 520.6,
+            "y": 256.3,
+            "t": 0.2
+          },
+          {
+            "x": 561.2,
+            "y": 237.0,
+            "t": 0.3
+          },
+          {
+            "x": 610.2,
+            "y": 198.7,
+            "t": 0.4
+          },
+          {
+            "x": 660.3,
+            "y": 147.7,
+            "t": 0.5
+          },
+          {
+            "x": 712.0,
+            "y": 97.9,
+            "t": 0.6
+          },
+          {
+            "x": 759.4,
+            "y": 58.2,
+            "t": 0.7
+          },
+          {
+            "x": 799.9,
+            "y": 37.9,
+            "t": 0.8
+          },
+          {
+            "x": 828.5,
+            "y": 31.5,
+            "t": 0.9
+          },
+          {
+            "x": 840.0,
+            "y": 32.0,
+            "t": 1.0
+          }
+        ],
+        "distance_px": 426.1
+      },
+      "typing_cadence_ms": null,
+      "simulated_scroll_px": 0,
+      "simulated_typo_correction": false,
+      "telemetry_emitted": "Store cookie persisted: { storeId: '0121', zip: '30339' }",
+      "human_rationale": "Prevents downstream geo-redirection modals that break automated flows.",
+      "status": "PENDING"
+    },
+    {
+      "step_number": 3,
+      "phase": "Intent Input & Search",
+      "action_type": "NATURAL_KEYSTROKE_SEARCH",
+      "target_element": "input#headerSearch",
+      "target_label": "Type Search Query: 'DEWALT 20V drill kit'",
+      "dwell_pause_ms": 3360,
+      "mouse_trajectory": {
+        "start_x": 840,
+        "start_y": 32,
+        "end_x": 480,
+        "end_y": 32,
+        "cp1": {
+          "x": 750,
+          "y": -59
+        },
+        "cp2": {
+          "x": 570,
+          "y": 82
+        },
+        "svg_path": "M 840 32 C 750 -59, 570 82, 480 32",
+        "points": [
+          {
+            "x": 840.0,
+            "y": 32.0,
+            "t": 0.0
+          },
+          {
+            "x": 832.8,
+            "y": 25.2,
+            "t": 0.1
+          },
+          {
+            "x": 809.4,
+            "y": 11.2,
+            "t": 0.2
+          },
+          {
+            "x": 771.6,
+            "y": 1.1,
+            "t": 0.3
+          },
+          {
+            "x": 718.4,
+            "y": 2.8,
+            "t": 0.4
+          },
+          {
+            "x": 660.7,
+            "y": 16.2,
+            "t": 0.5
+          },
+          {
+            "x": 599.9,
+            "y": 32.4,
+            "t": 0.6
+          },
+          {
+            "x": 549.1,
+            "y": 42.2,
+            "t": 0.7
+          },
+          {
+            "x": 511.3,
+            "y": 41.1,
+            "t": 0.8
+          },
+          {
+            "x": 487.8,
+            "y": 36.1,
+            "t": 0.9
+          },
+          {
+            "x": 480.0,
+            "y": 32.0,
+            "t": 1.0
+          }
+        ],
+        "distance_px": 360.0
+      },
+      "typing_cadence_ms": 165,
+      "simulated_scroll_px": 0,
+      "simulated_typo_correction": true,
+      "telemetry_emitted": "Keydown/Keyup events with Gaussian inter-key delay + auto-suggest beacon",
+      "human_rationale": "Simulates natural human typing speed with deliberate typo ('DEWLAT') followed by backspace correction.",
+      "status": "PENDING"
+    },
+    {
+      "step_number": 4,
+      "phase": "Catalog Facet & Scroll Exploration",
+      "action_type": "KINETIC_SCROLL_AND_FILTER",
+      "target_element": "input[name='brand_dewalt']",
+      "target_label": "Scroll Results & Select 'Brand: DEWALT' Checkbox",
+      "dwell_pause_ms": 3919,
+      "mouse_trajectory": {
+        "start_x": 480,
+        "start_y": 32,
+        "end_x": 180,
+        "end_y": 340,
+        "cp1": {
+          "x": 316,
+          "y": 23
+        },
+        "cp2": {
+          "x": 330,
+          "y": 336
+        },
+        "svg_path": "M 480 32 C 316 23, 330 336, 180 340",
+        "points": [
+          {
+            "x": 480.0,
+            "y": 32.0,
+            "t": 0.0
+          },
+          {
+            "x": 465.8,
+            "y": 31.5,
+            "t": 0.1
+          },
+          {
+            "x": 434.6,
+            "y": 38.7,
+            "t": 0.2
+          },
+          {
+            "x": 394.2,
+            "y": 65.8,
+            "t": 0.3
+          },
+          {
+            "x": 358.1,
+            "y": 115.5,
+            "t": 0.4
+          },
+          {
+            "x": 325.3,
+            "y": 180.1,
+            "t": 0.5
+          },
+          {
+            "x": 292.1,
+            "y": 247.5,
+            "t": 0.6
+          },
+          {
+            "x": 258.5,
+            "y": 300.4,
+            "t": 0.7
+          },
+          {
+            "x": 220.9,
+            "y": 328.9,
+            "t": 0.8
+          },
+          {
+            "x": 192.8,
+            "y": 339.4,
+            "t": 0.9
+          },
+          {
+            "x": 180.0,
+            "y": 340.0,
+            "t": 1.0
+          }
+        ],
+        "distance_px": 430.0
+      },
+      "typing_cadence_ms": null,
+      "simulated_scroll_px": 480,
+      "simulated_typo_correction": false,
+      "telemetry_emitted": "Wheel event scroll stream + Facet interaction telemetry beacon",
+      "human_rationale": "Human scans the grid with multi-step inertia scrolling before zeroing in on preferred brand.",
+      "status": "PENDING"
+    },
+    {
+      "step_number": 5,
+      "phase": "Target Item Selection",
+      "action_type": "PREVIEW_AND_NAVIGATE_PDP",
+      "target_element": "a.product-image__link",
+      "target_label": "Hover Thumbnail & Click DEWALT DCD771C2",
+      "dwell_pause_ms": 2940,
+      "mouse_trajectory": {
+        "start_x": 180,
+        "start_y": 340,
+        "end_x": 420,
+        "end_y": 420,
+        "cp1": {
+          "x": 213,
+          "y": 438
+        },
+        "cp2": {
+          "x": 379,
+          "y": 341
+        },
+        "svg_path": "M 180 340 C 213 438, 379 341, 420 420",
+        "points": [
+          {
+            "x": 180.0,
+            "y": 340.0,
+            "t": 0.0
+          },
+          {
+            "x": 182.3,
+            "y": 348.2,
+            "t": 0.1
+          },
+          {
+            "x": 193.4,
+            "y": 364.6,
+            "t": 0.2
+          },
+          {
+            "x": 216.5,
+            "y": 379.4,
+            "t": 0.3
+          },
+          {
+            "x": 252.2,
+            "y": 387.4,
+            "t": 0.4
+          },
+          {
+            "x": 297.8,
+            "y": 387.9,
+            "t": 0.5
+          },
+          {
+            "x": 340.7,
+            "y": 385.3,
+            "t": 0.6
+          },
+          {
+            "x": 379.2,
+            "y": 389.4,
+            "t": 0.7
+          },
+          {
+            "x": 404.0,
+            "y": 400.6,
+            "t": 0.8
+          },
+          {
+            "x": 416.0,
+            "y": 413.3,
+            "t": 0.9
+          },
+          {
+            "x": 420.0,
+            "y": 420.0,
+            "t": 1.0
+          }
+        ],
+        "distance_px": 253.0
+      },
+      "typing_cadence_ms": null,
+      "simulated_scroll_px": 120,
+      "simulated_typo_correction": false,
+      "telemetry_emitted": "Hover state trigger (600ms dwell) + Mousedown/Mouseup click event pair",
+      "human_rationale": "Bots click instantly without hovering; humans pause over the image and pricing card first.",
+      "status": "PENDING"
+    },
+    {
+      "step_number": 6,
+      "phase": "Product Detail Page Inspection",
+      "action_type": "INSPECT_SPECIFICATIONS_AND_MEDIA",
+      "target_element": ".mediagallery__thumb:nth-child(2)",
+      "target_label": "Click Secondary Media Angle & Expand Specs Accordion",
+      "dwell_pause_ms": 6720,
+      "mouse_trajectory": {
+        "start_x": 420,
+        "start_y": 420,
+        "end_x": 160,
+        "end_y": 480,
+        "cp1": {
+          "x": 335,
+          "y": 351
+        },
+        "cp2": {
+          "x": 233,
+          "y": 503
+        },
+        "svg_path": "M 420 420 C 335 351, 233 503, 160 480",
+        "points": [
+          {
+            "x": 420.0,
+            "y": 420.0,
+            "t": 0.0
+          },
+          {
+            "x": 413.0,
+            "y": 414.9,
+            "t": 0.1
+          },
+          {
+            "x": 392.2,
+            "y": 405.9,
+            "t": 0.2
+          },
+          {
+            "x": 363.1,
+            "y": 401.3,
+            "t": 0.3
+          },
+          {
+            "x": 326.3,
+            "y": 411.9,
+            "t": 0.4
+          },
+          {
+            "x": 286.2,
+            "y": 433.5,
+            "t": 0.5
+          },
+          {
+            "x": 246.0,
+            "y": 456.7,
+            "t": 0.6
+          },
+          {
+            "x": 210.0,
+            "y": 474.6,
+            "t": 0.7
+          },
+          {
+            "x": 184.0,
+            "y": 482.8,
+            "t": 0.8
+          },
+          {
+            "x": 166.7,
+            "y": 481.1,
+            "t": 0.9
+          },
+          {
+            "x": 160.0,
+            "y": 480.0,
+            "t": 1.0
+          }
+        ],
+        "distance_px": 266.8
+      },
+      "typing_cadence_ms": null,
+      "simulated_scroll_px": 320,
+      "simulated_typo_correction": false,
+      "telemetry_emitted": "Image carousel click beacon + Scroll depth beacon (40% page read)",
+      "human_rationale": "Demonstrates high-intent human evaluation: inspecting the physical tool angles and motor specs.",
+      "status": "PENDING"
+    },
+    {
+      "step_number": 7,
+      "phase": "Fulfillment Selection & Cart Action",
+      "action_type": "HUMAN_MIMETIC_ADD_TO_CART",
+      "target_element": "#add-to-cart-button",
+      "target_label": "Curved Approach & Click 'Add to Cart ($159.00)'",
+      "dwell_pause_ms": 5040,
+      "mouse_trajectory": {
+        "start_x": 160,
+        "start_y": 480,
+        "end_x": 800,
+        "end_y": 510,
+        "cp1": {
+          "x": 314,
+          "y": 597
+        },
+        "cp2": {
+          "x": 646,
+          "y": 369
+        },
+        "svg_path": "M 160 480 C 314 597, 646 369, 800 510",
+        "points": [
+          {
+            "x": 160.0,
+            "y": 480.0,
+            "t": 0.0
+          },
+          {
+            "x": 173.1,
+            "y": 488.8,
+            "t": 0.1
+          },
+          {
+            "x": 214.2,
+            "y": 506.6,
+            "t": 0.2
+          },
+          {
+            "x": 281.6,
+            "y": 514.6,
+            "t": 0.3
+          },
+          {
+            "x": 374.0,
+            "y": 506.1,
+            "t": 0.4
+          },
+          {
+            "x": 480.5,
+            "y": 486.9,
+            "t": 0.5
+          },
+          {
+            "x": 586.8,
+            "y": 468.1,
+            "t": 0.6
+          },
+          {
+            "x": 679.7,
+            "y": 462.7,
+            "t": 0.7
+          },
+          {
+            "x": 745.9,
+            "y": 477.4,
+            "t": 0.8
+          },
+          {
+            "x": 787.0,
+            "y": 498.4,
+            "t": 0.9
+          },
+          {
+            "x": 800.0,
+            "y": 510.0,
+            "t": 1.0
+          }
+        ],
+        "distance_px": 640.7
+      },
+      "typing_cadence_ms": null,
+      "simulated_scroll_px": 0,
+      "simulated_typo_correction": false,
+      "telemetry_emitted": "Fitts's Law compliant cursor arrival + sensor_data cart token validated",
+      "human_rationale": "Approaches CTA with natural deceleration curve; clicks button only after all pre-conditions are satisfied.",
+      "status": "PENDING"
+    },
+    {
+      "step_number": 8,
+      "phase": "Cart Confirmation & Verification",
+      "action_type": "VERIFY_MINI_CART_FLYOUT",
+      "target_element": "a.mini-cart__view-cart",
+      "target_label": "Observe Mini-Cart Slide-In & Confirm Subtotal",
+      "dwell_pause_ms": 3639,
+      "mouse_trajectory": {
+        "start_x": 800,
+        "start_y": 510,
+        "end_x": 1050,
+        "end_y": 380,
+        "cp1": {
+          "x": 900,
+          "y": 549
+        },
+        "cp2": {
+          "x": 963,
+          "y": 367
+        },
+        "svg_path": "M 800 510 C 900 549, 963 367, 1050 380",
+        "points": [
+          {
+            "x": 800.0,
+            "y": 510.0,
+            "t": 0.0
+          },
+          {
+            "x": 807.7,
+            "y": 513.7,
+            "t": 0.1
+          },
+          {
+            "x": 830.4,
+            "y": 514.9,
+            "t": 0.2
+          },
+          {
+            "x": 860.5,
+            "y": 508.4,
+            "t": 0.3
+          },
+          {
+            "x": 894.3,
+            "y": 486.7,
+            "t": 0.4
+          },
+          {
+            "x": 928.9,
+            "y": 453.9,
+            "t": 0.5
+          },
+          {
+            "x": 964.6,
+            "y": 421.6,
+            "t": 0.6
+          },
+          {
+            "x": 996.4,
+            "y": 395.1,
+            "t": 0.7
+          },
+          {
+            "x": 1023.3,
+            "y": 382.7,
+            "t": 0.8
+          },
+          {
+            "x": 1043.7,
+            "y": 379.2,
+            "t": 0.9
+          },
+          {
+            "x": 1050.0,
+            "y": 380.0,
+            "t": 1.0
+          }
+        ],
+        "distance_px": 281.8
+      },
+      "typing_cadence_ms": null,
+      "simulated_scroll_px": 0,
+      "simulated_typo_correction": false,
+      "telemetry_emitted": "Cart flyout impression registered; Session health: 100% human rating",
+      "human_rationale": "Human pauses to verify item price ($159.00) matches expected offer before taking next step.",
+      "status": "PENDING"
+    }
+  ],
+  "audit_summary": "Synthesized 8-step human-mimetic operation plan for The Home Depot Digital Platform. Incorporates Bezier cursor trajectories, Poisson reading pauses, typo simulation, and Akamai-compliant sensor telemetry."
+}

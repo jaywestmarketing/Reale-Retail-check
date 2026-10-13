@@ -1,18 +1,33 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>OmniPrice Mechanism Studio</title>
-    <meta name="description" content="Modular multi-retailer price tracker powered by autonomous agentic DOM element identification, Python web scraping ingestion, and C++ numerical fluctuation analytics." />
+    <meta
+      name="description"
+      content="Modular multi-retailer price tracker powered by autonomous agentic DOM element identification, Python web scraping ingestion, and C++ numerical fluctuation analytics."
+    />
     <meta property="og:title" content="OmniPrice Mechanism Studio" />
-    <meta property="og:description" content="Modular multi-retailer price tracker powered by autonomous agentic DOM element identification, Python web scraping ingestion, and C++ numerical fluctuation analytics." />
-    <meta property="og:type" content="website" />
-    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      property="og:description"
+      content="Modular multi-retailer price tracker powered by autonomous agentic DOM element identification, Python web scraping ingestion, and C++ numerical fluctuation analytics."
+    />
+    <script>
+      // Ignore websocket disconnection noise in iframe preview environments
+      window.addEventListener('unhandledrejection', function (event) {
+        if (
+          event.reason &&
+          (event.reason.message?.includes('WebSocket') ||
+            event.reason.message?.includes('closed without opened'))
+        ) {
+          event.preventDefault();
+        }
+      });
+    </script>
   </head>
-  <body>
+  <body class="bg-slate-50 text-slate-900 antialiased selection:bg-indigo-500 selection:text-white">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
-
